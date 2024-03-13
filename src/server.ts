@@ -56,19 +56,24 @@ app.post('/cadastro/:tipo', async (req, res) => {
 })
 
 app.post('/gerarPedido/:nomeParams', async (req, res) => {
-    const { nomeParams } = req.params
-    const usuario = await Usuario.findOne({nome: nomeParams})
-    if (!usuario?.$isEmpty) {
-        try {
-            const userId = usuario?.id;
-            const dadosPedido: Pedido = { userId: userId, ...req.body };
-            const novoPedido: Pedido = await PedidoModel.create(dadosPedido);
-            res.send({msg: "Pedido inserido com sucesso.", Pedido: novoPedido})
-        } catch (err) {
-            res.send({msg: err})
+    try {
+        const { nomeParams } = req.params;
+        const usuario = await Usuario.findOne({ nome: nomeParams });
+
+        if (!usuario) {
+            return res.status(404).send({ msg: 'Usuário não encontrado.' });
         }
+
+        const userId = usuario._id;
+        const dadosPedido: Pedido = { userId, ...req.body };
+        const novoPedido: Pedido = await PedidoModel.create(dadosPedido);
+        
+        res.send({ msg: "Pedido inserido com sucesso.", Pedido: novoPedido });
+    } catch (err) {
+        console.error('Erro ao gerar pedido:', err);
+        res.status(500).send({ msg: 'Erro ao gerar pedido.' });
     }
-})
+});
 
 app.get('/listar', async (req, res) => {
     const usuarioLista = await Usuario.find()   //Traz uma lista de usuários que ele achar no JSON
