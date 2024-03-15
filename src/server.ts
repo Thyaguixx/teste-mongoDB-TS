@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 import express from 'express'
 import cors from 'cors'
-import { Usuario } from "../models/Usuario";
+import { Usuario, usuarioInterface } from "../models/Usuario";
 import { Produto } from "../models/Produto";
 import { Servico } from "../models/Servico";
 import { PedidoModel, Pedido } from "../models/Pedido";
+import { SETUsuario } from "../controllers/SETUsuario";
 
 // mongoose.connect("mongodb+srv://thyaguixx:apithy2024@api-4desk.9q9ww5g.mongodb.net/?retryWrites=true&w=majority")
 mongoose.connect('mongodb://localhost:27017/TestesAPI')
@@ -24,13 +25,26 @@ app.post('/cadastro/:tipo', async (req, res) => {
     const { tipo } = req.params
 
     if (tipo == 'usuario') {
-        const usuario = new Usuario({
+        // const usuario = new Usuario({
+        //     nome: req.body.nome,
+        //     idade: req.body.idade
+        // })
+
+        // await usuario.save()    //Salvar no banco (JSON)
+        // res.send({msg: "Cadastrou essa porra vai curintia"})
+    
+        const dadosUsuario: usuarioInterface = {
             nome: req.body.nome,
             idade: req.body.idade
-        })
+        }
 
-        await usuario.save()    //Salvar no banco (JSON)
-        res.send({msg: "Cadastrou essa porra vai curintia"})
+        const retorno = await SETUsuario(dadosUsuario)
+
+        if (retorno.Sucesso){
+            res.send({msg:"Usuário cadastrado com sucesso.", Sucesso: retorno.Sucesso, retornoUsuario: retorno.Retorno})
+        } else {
+            res.send({msg:"Erro ao cadastrar usuario.", erro: retorno.Erro})
+        }
     }
    
 

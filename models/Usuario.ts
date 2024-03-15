@@ -1,9 +1,14 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
+
+export interface usuarioInterface{
+    nome: string,
+    idade: number
+}
 
 const UsuarioSchema = new mongoose.Schema({
-    nome: String,
-    idade: String
+    nome: {type: String, required: true, unique: true},
+    idade: {type: Number}
 });
 
-export const Usuario = mongoose.model('Usuario', UsuarioSchema);
+export const Usuario = mongoose.model<usuarioInterface>('Usuario', UsuarioSchema);
 
