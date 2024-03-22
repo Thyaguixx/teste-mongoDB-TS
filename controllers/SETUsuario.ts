@@ -1,6 +1,6 @@
-import { Usuario, usuarioInterface } from "../models/Usuario";
+import { Usuario } from "../models/Usuario";
 
-export async function SETUsuario(dadosUsuario: usuarioInterface){
+export async function SETUsuario(dadosUsuario){
     try {
         const usuario = new Usuario({
             nome: dadosUsuario.nome,

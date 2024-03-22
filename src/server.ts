@@ -1,20 +1,36 @@
 import mongoose from "mongoose";
 import express from 'express'
 import cors from 'cors'
-import { Usuario, usuarioInterface } from "../models/Usuario";
+import { Usuario } from "../models/Usuario";
 import { Produto } from "../models/Produto";
 import { Servico } from "../models/Servico";
 import { PedidoModel, Pedido } from "../models/Pedido";
 import { SETUsuario } from "../controllers/SETUsuario";
 
-// mongoose.connect("mongodb+srv://thyaguixx:apithy2024@api-4desk.9q9ww5g.mongodb.net/?retryWrites=true&w=majority")
-mongoose.connect('mongodb://localhost:27017/TestesAPI')
+mongoose.connect("mongodb+srv://thyaguixx:apithy2024@api-4desk.9q9ww5g.mongodb.net/?retryWrites=true&w=majority")
     .then(() => {
         console.log('Conectado ao MongoDB');
     })
     .catch(err => {
         console.error('Erro de conexão com o MongoDB:', err);
     });
+    
+//Conexão com o localhost do mongo compass lá da maquina da fatec
+// mongoose.connect('mongodb://localhost:27017/TestesAPI')
+//     .then(() => {
+//         console.log('Conectado ao MongoDB');
+//     })
+//     .catch(err => {
+//         console.error('Erro de conexão com o MongoDB:', err);
+//     });
+
+// mongoose.connect('mongodb://localhost:27017/API-4Desk')
+//     .then(() => {
+//         console.log('Conectado ao MongoDB');
+//     })
+//     .catch(err => {
+//         console.error('Erro de conexão com o MongoDB:', err);
+//     });
 
 const app = express()
 app.use(cors())
@@ -25,28 +41,20 @@ app.post('/cadastro/:tipo', async (req, res) => {
     const { tipo } = req.params
 
     if (tipo == 'usuario') {
-        // const usuario = new Usuario({
-        //     nome: req.body.nome,
-        //     idade: req.body.idade
-        // })
-
-        // await usuario.save()    //Salvar no banco (JSON)
-        // res.send({msg: "Cadastrou essa porra vai curintia"})
-    
-        const dadosUsuario: usuarioInterface = {
+        const dadosUsuario = {
             nome: req.body.nome,
             idade: req.body.idade
         }
 
         const retorno = await SETUsuario(dadosUsuario)
 
-        if (retorno.Sucesso){
-            res.send({msg:"Usuário cadastrado com sucesso.", Sucesso: retorno.Sucesso, retornoUsuario: retorno.Retorno})
+        if (retorno.Sucesso) {
+            res.send({ msg: "Usuário cadastrado com sucesso.", Sucesso: retorno.Sucesso, retornoUsuario: retorno.Retorno })
         } else {
-            res.send({msg:"Erro ao cadastrar usuario.", erro: retorno.Erro})
+            res.send({ msg: "Erro ao cadastrar usuario.", erro: retorno.Erro })
         }
     }
-   
+
 
     if (tipo == 'produto') {
         const produto = new Produto({
@@ -55,7 +63,7 @@ app.post('/cadastro/:tipo', async (req, res) => {
         })
 
         await produto.save()    //Salvar no banco (JSON)
-        res.send({msg: "Cadastrou essa porra vai curintia"})
+        res.send({ msg: "Cadastrou essa porra vai curintia" })
     }
 
     // if (tipo == 'servico') {
@@ -81,7 +89,7 @@ app.post('/gerarPedido/:nomeParams', async (req, res) => {
         const userId = usuario._id;
         const dadosPedido: Pedido = { userId, ...req.body };
         const novoPedido: Pedido = await PedidoModel.create(dadosPedido);
-        
+
         res.send({ msg: "Pedido inserido com sucesso.", Pedido: novoPedido });
     } catch (err) {
         console.error('Erro ao gerar pedido:', err);
@@ -94,7 +102,7 @@ app.get('/listar', async (req, res) => {
     const produtoLista = await Produto.find()
     // const servicoLista = await Servico.find()
     const pedidoLista = await PedidoModel.find()
-    res.send({Usuarios: usuarioLista, Pedidos: pedidoLista, Produtos: produtoLista}) //, Servicos: servicoLista})
+    res.send({ Usuarios: usuarioLista, Pedidos: pedidoLista, Produtos: produtoLista }) //, Servicos: servicoLista})
 })
 
 app.listen(3001, () => {
