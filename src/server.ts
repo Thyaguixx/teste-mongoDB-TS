@@ -7,22 +7,22 @@ import { Servico } from "../models/Servico";
 import { PedidoModel, Pedido } from "../models/Pedido";
 import { SETUsuario } from "../controllers/SETUsuario";
 
-mongoose.connect("mongodb+srv://thyaguixx:apithy2024@api-4desk.9q9ww5g.mongodb.net/?retryWrites=true&w=majority")
-    .then(() => {
-        console.log('Conectado ao MongoDB');
-    })
-    .catch(err => {
-        console.error('Erro de conexão com o MongoDB:', err);
-    });
-    
-//Conexão com o localhost do mongo compass lá da maquina da fatec
-// mongoose.connect('mongodb://localhost:27017/TestesAPI')
+// mongoose.connect("mongodb+srv://thyaguixx:apithy2024@api-4desk.9q9ww5g.mongodb.net/?retryWrites=true&w=majority")
 //     .then(() => {
 //         console.log('Conectado ao MongoDB');
 //     })
 //     .catch(err => {
 //         console.error('Erro de conexão com o MongoDB:', err);
 //     });
+    
+//Conexão com o localhost do mongo compass lá da maquina da fatec
+mongoose.connect('mongodb://localhost:27017/TestesAPI')
+    .then(() => {
+        console.log('Conectado ao MongoDB');
+    })
+    .catch(err => {
+        console.error('Erro de conexão com o MongoDB:', err);
+    });
 
 // mongoose.connect('mongodb://localhost:27017/API-4Desk')
 //     .then(() => {
